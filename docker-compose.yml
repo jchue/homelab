@@ -1,0 +1,65 @@
+---
+version: "3.8"
+
+services:
+  homeassistant:
+    image: homeassistant/home-assistant:stable
+    volumes:
+      - ./config/:/config/
+    devices:
+      - /dev/ttyUSB0:/dev/ttyUSB0
+      - /dev/ttyUSB1:/dev/ttyUSB1
+    environment:
+      - TZ=${TZ}
+    networks:
+      default:
+      macvlan:
+        ipv4_address: ${HOMEASSISTANT_IPV4_ADDRESS}
+    restart: unless-stopped
+
+  db:
+    image: ghcr.io/linuxserver/mariadb
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+      - FILE__MYSQL_ROOT_PASSWORD=/run/secrets/mysql_root_password
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USER}
+      - FILE__MYSQL_PASSWORD=/run/secrets/mysql_password
+    secrets:
+      - mysql_root_password
+      - mysql_password
+    volumes:
+      - ./dbdata/:/config/
+    networks:
+      default:
+    restart: unless-stopped
+
+  adminer:
+    image: adminer
+    ports:
+      - ${ADMINER_HOST_PORT}:8080
+    networks:
+      default:
+
+  filebeat:
+    image: docker.elastic.co/beats/filebeat:7.12.0
+    user: ${PUID}
+    volumes:
+      - ./filebeat/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
+      - ./config/home-assistant.log:/var/log/home-assistant.log:ro
+    networks:
+      macvlan:
+        ipv4_address: ${FILEBEAT_IPV4_ADDRESS}
+    restart: unless-stopped
+
+networks:
+  macvlan:
+    name: ${NETWORK_NAME}
+    external: true
+secrets:
+  mysql_root_password:
+    file: ${MYSQL_ROOT_PASSWORD_FILE}
+  mysql_password:
+    file: ${MYSQL_PASSWORD_FILE}

@@ -43,6 +43,20 @@ services:
     networks:
       default:
 
+  zwavejs2mqtt:
+    image: zwavejs/zwavejs2mqtt:latest
+    devices:
+      - /dev/ttyUSB0:/dev/ttyUSB0
+      - /dev/ttyUSB1:/dev/ttyUSB1
+    environment:
+      - TZ=${TZ}
+    volumes:
+      - ./zwavejs/:/usr/src/app/store/
+    ports:
+      - ${ZWAVEJS_HOST_GUI_PORT}:8091
+      - ${ZWAVEJS_HOST_WEBSOCKET_PORT}:3000
+    restart: unless-stopped
+
   filebeat:
     image: docker.elastic.co/beats/filebeat:7.12.0
     user: ${PUID}

@@ -1,0 +1,25 @@
+---
+version: "3.8"
+
+services:
+  mosquitto:
+    image: eclipse-mosquitto
+    volumes:
+      - ./mosquitto.conf:/mosquitto/config/mosquitto.conf
+      - ./appdata/:/mosquitto/data/
+      - ./logs/:/mosquitto/log/
+      - type: bind
+        source: ./password_file
+        target: /mosquitto/config/password_file
+    networks:
+      default:
+      mqtt:
+    ports:
+      - ${MOSQUITTO_HOST_PORT_1}:1883
+      - ${MOSQUITTO_HOST_PORT_2}:9001
+    restart: unless-stopped
+
+networks:
+  mqtt:
+    name: mqtt
+    external: true

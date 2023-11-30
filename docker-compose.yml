@@ -15,6 +15,8 @@ services:
       default:
       macvlan:
         ipv4_address: ${HOMEASSISTANT_IPV4_ADDRESS}
+      # Required for Frigage
+      mqtt:
     restart: unless-stopped
 
   db:
@@ -43,8 +45,8 @@ services:
     networks:
       default:
 
-  zwavejs2mqtt:
-    image: zwavejs/zwavejs2mqtt:latest
+  zwavejs:
+    image: zwavejs/zwave-js-ui:latest
     devices:
       - /dev/ttyUSB0:/dev/ttyUSB0
       - /dev/ttyUSB1:/dev/ttyUSB1
@@ -71,6 +73,9 @@ services:
 networks:
   macvlan:
     name: ${NETWORK_NAME}
+    external: true
+  mqtt:
+    name: mqtt
     external: true
 secrets:
   mysql_root_password:

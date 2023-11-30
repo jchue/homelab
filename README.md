@@ -1,5 +1,7 @@
 # Frigate
 
+Frigate is NVR with real-time AI object detection. It has its own UI but also integrates well with Home Assistant.
+
 ## Setup
 
 - The application gets its own external IP using the `macvlan` Docker network driver. The external Docker network must be created as a prerequisite.

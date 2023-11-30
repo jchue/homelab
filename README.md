@@ -1,6 +1,6 @@
 # Frigate
 
-Frigate is NVR with real-time AI object detection. It has its own UI but also integrates well with Home Assistant.
+Frigate is an NVR with real-time AI object detection. It has its own UI but also integrates well with Home Assistant.
 
 ## Setup
 

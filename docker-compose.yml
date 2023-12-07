@@ -1,0 +1,19 @@
+---
+version: "3.8"
+
+services:
+  jellyfin:
+    image: lscr.io/linuxserver/jellyfin
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+      - JELLYFIN_PublishedServerUrl=${JELLYFIN_PublishedServerUrl}
+    volumes:
+      - ./config/:/config/
+      - ./tvshows/:/data/tvshows/
+      - ./movies/:/data/movies/
+      - ./music-videos/:/data/music-videos/
+    ports:
+      - ${JELLYFIN_HTTP_HOST_PORT}:8096
+    restart: unless-stopped

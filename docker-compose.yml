@@ -1,0 +1,35 @@
+---
+version: "3.8"
+
+services:
+  frigate:
+    privileged: true
+    image: ghcr.io/blakeblackshear/frigate:stable
+    shm_size: "64mb"
+    environment:
+      - FRIGATE_MQTT_USER=${FRIGATE_MQTT_USER}
+      - FRIGATE_MQTT_PASSWORD=${FRIGATE_MQTT_PASSWORD}
+      - FRIGATE_RTSP_HOST=${FRIGATE_RTSP_HOST}
+      - FRIGATE_RTSP_USER=${FRIGATE_RTSP_USER}
+      - FRIGATE_RTSP_PASSWORD=${FRIGATE_RTSP_PASSWORD}
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - ./config.yml:/config/config.yml:ro
+      - ./appdata/:/media/frigate/
+      - type: tmpfs
+        target: /tmp/cache
+        tmpfs:
+          size: 1000000000
+    networks:
+      macvlan:
+        ipv4_address: ${FRIGATE_IPV4_ADDRESS}
+      mqtt:
+    restart: unless-stopped
+
+networks:
+  macvlan:
+    name: ${NETWORK_NAME}
+    external: true
+  mqtt:
+    name: mqtt
+    external: true

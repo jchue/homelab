@@ -1,0 +1,45 @@
+mqtt:
+  host: mosquitto
+  port: 1883
+  user: '{FRIGATE_MQTT_USER}'
+  password: '{FRIGATE_MQTT_PASSWORD}'
+
+cameras:
+  front:
+    ffmpeg:
+      inputs:
+        - path: rtsp://{FRIGATE_RTSP_USER}:{FRIGATE_RTSP_PASSWORD}@{FRIGATE_RTSP_HOST}:554/cam/realmonitor?channel=1&subtype=0
+          roles:
+            - detect
+        - path: rtsp://{FRIGATE_RTSP_USER}:{FRIGATE_RTSP_PASSWORD}@{FRIGATE_RTSP_HOST}:554/cam/realmonitor?channel=1&subtype=01
+          roles:
+            - record
+            - rtmp
+    detect:
+      enabled: True
+      width: 640
+      height: 480
+
+objects:
+  track:
+    - person
+    - car
+    - bicycle
+    - motorcycle
+    - cat
+    - dog
+
+record:
+  enabled: True
+  retain:
+    days: 0
+  events:
+    retain:
+      default: 3
+
+snapshots:
+  enabled: True
+  timestamp: True
+  bounding_box: True
+  retain:
+    default: 3

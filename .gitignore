@@ -1,0 +1,6 @@
+*
+!.gitignore
+!README.md
+!docker-compose.yml
+!.env.example
+!mosquitto.conf

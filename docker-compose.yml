@@ -1,0 +1,20 @@
+---
+version: "3.8"
+
+services:
+  navidrome:
+    image: deluan/navidrome:latest
+    user: ${PUID}:${PGID} # should be owner of volumes
+    environment:
+      - ND_SCANSCHEDULE=${ND_SCANSCHEDULE}
+      - ND_LOGLEVEL=${ND_LOGLEVEL}
+      - ND_SESSIONTIMEOUT=${ND_SESSIONTIMEOUT}
+      - ND_BASEURL=${ND_BASEURL}
+      - ND_REVERSEPROXYUSERHEADER=${ND_REVERSEPROXYUSERHEADER}
+      - ND_REVERSEPROXYWHITELIST=${ND_REVERSEPROXYWHITELIST}
+    ports:
+      - ${HOST_PORT}:4533
+    volumes:
+      - "./data/:/data/"
+      - "./music/:/music/:ro"
+    restart: unless-stopped
